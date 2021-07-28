@@ -1,0 +1,62 @@
+.commentBox {
+  font-size: 0;
+  padding: 0 .16rem;
+  margin-bottom: .18rem;
+  background: rgb(246, 222, 246);
+}
+.commentBox>p {
+  font-size: 0;
+  padding: .12rem 0 .317rem;
+}
+.commentTitleBox {
+  display: flex;
+  justify-content: space-between;
+}
+.commentTitleBox span:first-child {
+  font-size: 14px;
+  font-weight: bold;
+}
+.commentTitleBox span:last-child {
+  font-size: 12px;
+  color: #999999;
+}
+.commentDetailBox {
+  height: 2.8rem;
+  overflow: hidden;
+}
+.commentHight {
+  overflow: none;
+  height: 146rem;
+}
+.commentDetail {
+  margin-bottom: .12rem;
+}
+.commentDetail>p {
+  font-size: 0;
+}
+.commentDetail .headImgText {
+  display: flex;
+  align-items: center;
+  margin-bottom: .16rem;
+}
+.commentDetail .headImgText>span {
+  display: inline-block;
+}
+.commentDetail .headImgText .headImg {
+  width: .56rem;
+  height: .56rem;
+  margin-right: .12rem;
+}
+.commentDetail .headImgText .userName {
+  font-size: 12px;
+}
+.commentDetail .content {
+  font-size: 14px;
+  margin-right: .32rem;
+  margin-bottom: .18rem;
+}
+.commentDetail .pic {
+  width: 1.44rem;
+  height: 1.44rem;
+  margin-bottom: .18rem;
+}
