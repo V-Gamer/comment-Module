@@ -1,31 +1,30 @@
 <template>
   <div id="app">
-    <div class="commentBox">
-      <p class="commentTitleBox">
-        <span>评价({{ commentList.length }})</span>
-        <span @click="open">查看全部 ></span>
-      </p>
-
-      <div
-        class="commentDetailBox"
-        id="commentDetailBox"
-        :class="{ commentHight: flag }"
-      >
+    <!-- <div class="commentBox" ref="commentBoxScroll" @scroll="scroll1" @mousewheel="scroll"> -->
+    <div class="commentBox" ref="commentBoxScroll" @scroll="scroll">
+      <div class="box" ref="box"></div>
+      <div class="commentDetailBox" ref="commentDetailBox">
         <div
           class="commentDetail"
           v-for="(item, idx) in commentData"
           :key="idx"
         >
-          <p class="headImgText">
-            <span class="headImg">
-              <img :src="item.headImg" alt="" />
-            </span>
-            <span class="userName" v-text="item.username"></span>
-          </p>
-          <p class="content" v-text="item.commentContent"></p>
-          <p class="pic">
-            <img :src="item.commentImg" alt="" />
-          </p>
+          <div>
+            <p class="headImgText">
+              <span class="headImg">
+                <img :src="item.headImg" alt="" />
+              </span>
+              <span class="userName" v-text="item.username"></span>
+            </p>
+            <p class="content" v-text="item.commentContent"></p>
+            <p class="pic">
+              <img :src="item.commentImg" alt="" />
+            </p>
+          </div>
+          <div>
+            <input type="text" v-model="item.num">
+          </div>
+          <div @click="del(item)" class="del">X</div>
         </div>
       </div>
     </div>
@@ -33,59 +32,108 @@
 </template>
 
 <script>
+// import $ from "jquery";
 export default {
   name: "App",
   components: {},
   data() {
     return {
+      // 用来保存切片后的数据
       commentData: [],
-      flag: false,
-      page: 0,
-      number: 10,
+      // 用来保存请求的数据
       commentList: [],
-      target1: 0,
-      target2:2430,
+      // 用来存储commentBox下子节点的下标
+      idx: 0,
+      // 用来记录调用了几次
+      heiValue: 0,
+      scrollH: 0,
+      lastScrollH: 0,
     };
   },
   created() {
     this.ev_getCommentData();
   },
   methods: {
-    ev_getCommentData() {
-      this.axios
-        .get("/getCommentData")
-        .then((res) => {
-          this.commentList = res.data;
-          // let commentListData = res.data
-          this.commentData = this.commentList.slice(this.page, this.number);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-        let that = this
-      window.onscroll = function () {
-        var scrollTop = document.documentElement.scrollTop;
-        that.target1 = scrollTop;
-        // console.log(scrollTop);
-        if (that.target1 >that.target2) {
-          that.target2 = that.target2+2430;
-          console.log(that.target2)
-          that.ev_commentOnLoad();
-        }
-      };
+    async ev_getCommentData() {
+      // 请求数据
+      let { data } = await this.axios("/getCommentData");
+      this.commentList = data;
 
-      console.log(this.target1);
-    },
-    open() {
-      this.flag = !this.flag;
-    },
-    ev_commentOnLoad() {
-      this.page = this.page + 11;
-      this.number = this.number + 10;
-      let dataList = this.commentList.slice(this.page, this.number);
-      for (var i = 0; i < dataList.length; i++) {
-        this.commentData.push(dataList[i]);
+      let child = this.$refs.commentDetailBox.children;
+
+      // 当chlid的长度为0 此时commentDetailBox下没有节点
+      if (child.length == 0) {
+        this.ev_getListData(0);
       }
+    },
+
+    // 此处的idx 是commentDetailBox下的子节点的下标
+    ev_getListData() {
+      this.commentData = this.commentList.slice(this.idx, this.idx + 4);
+      if (this.scrollH < this.lastScrollH && this.idx >= 0) {
+        this.idx = this.idx - 1;
+      } else if (this.scrollH > this.lastScrollH) {
+        this.idx = this.idx + 1;
+      }
+      if (this.idx <= 0) {
+        this.idx = 0;
+      }
+    },
+
+    // commentDetailBox高度的增加和减少
+    ev_changeHeight(heightValue) {
+      let comDetailBox = this.$refs.commentDetailBox;
+      let box = this.$refs.box;
+
+      // 上滚的情况
+      // if (this.scrollH < this.lastScrollH) {
+      //   box.style.height = heightValue + "px";
+      // } else {
+      // 下滚的情况判断
+      // 若box的高度为0 则滚动时不添加78px
+      if (heightValue == 0) {
+        box.style.height = heightValue + "px";
+      } else {
+        box.style.height = heightValue + "px";
+      }
+      comDetailBox.style.height = 178000 - (heightValue + 197) + "px";
+      // }
+    },
+
+    // 监听div下的滚动距离
+    scroll() {
+      console.log("idx", this.idx);
+      let scrolled1 = this.$refs.commentBoxScroll.scrollTop;
+      let scrolled = Math.floor(this.$refs.commentBoxScroll.scrollTop);
+      console.log("scrollValue", scrolled);
+      this.scrollH = scrolled1;
+      this.idx = Math.floor(scrolled / 197);
+
+      console.log("this", this.scrollH);
+      console.log("last", this.lastScrollH);
+
+      // 判断下标
+      if (this.idx >= 996) {
+        this.idx = 997;
+      }
+
+      // 获取commentDetailBox下的子节点
+      let child = this.$refs.commentDetailBox.children;
+      console.log(child);
+
+      // 调用函数
+      this.ev_getListData();
+      this.ev_changeHeight(scrolled1);
+      this.lastScrollH = this.scrollH;
+    },
+    del(obj){
+      console.log(obj.id)
+      obj.flag = !obj.flag;
+      // let idx = obj.id;
+      const list  =  this.commentList.filter ( obj => obj.flag) 
+      this.commentList = list;
+      console.log(this.commentList)
+      this.ev_getListData();
     },
   },
 };

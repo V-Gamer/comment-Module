@@ -1,15 +1,26 @@
+body {
+  cursor: pointer;
+}
 .commentBox {
   font-size: 0;
-  padding: 0 .16rem;
-  margin-bottom: .18rem;
+  padding: 0 16px;
+  margin: 9px;
+  /* margin-bottom: 9px; */
   background: rgb(246, 222, 246);
+  height: 534px;
+  overflow-y: scroll;
 }
 .commentBox>p {
   font-size: 0;
-  padding: .12rem 0 .317rem;
+  padding: 12px 0 31.7px;
+}
+.box {
+  height: 0;
 }
 .commentTitleBox {
   display: flex;
+  position: fixed;
+  height: 20px;
   justify-content: space-between;
 }
 .commentTitleBox span:first-child {
@@ -20,16 +31,12 @@
   font-size: 12px;
   color: #999999;
 }
-.commentDetailBox {
-  height: 2.8rem;
-  overflow: hidden;
-}
-.commentHight {
-  overflow: none;
-  height: 146rem;
-}
 .commentDetail {
-  margin-bottom: .12rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
 }
 .commentDetail>p {
   font-size: 0;
@@ -37,26 +44,30 @@
 .commentDetail .headImgText {
   display: flex;
   align-items: center;
-  margin-bottom: .16rem;
+  margin-bottom: 16px;
 }
 .commentDetail .headImgText>span {
   display: inline-block;
 }
 .commentDetail .headImgText .headImg {
-  width: .56rem;
-  height: .56rem;
-  margin-right: .12rem;
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
 }
 .commentDetail .headImgText .userName {
   font-size: 12px;
 }
 .commentDetail .content {
   font-size: 14px;
-  margin-right: .32rem;
-  margin-bottom: .18rem;
+  margin-right: 32px;
+  margin-bottom: 9px;
 }
 .commentDetail .pic {
-  width: 1.44rem;
-  height: 1.44rem;
-  margin-bottom: .18rem;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 9px;
+}
+.del {
+  font-size: 18px;
+  color: red;
 }
